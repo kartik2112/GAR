@@ -93,6 +93,7 @@ def get_gpu_memory_map():
     gpu_info = dict(zip(range(len(gpu_info)), gpu_info))
     sorted_gpu_info = sorted(gpu_info.items(), key=lambda kv: kv[1][0], reverse=True)
     sorted_gpu_info = sorted(sorted_gpu_info, key=lambda kv: kv[1][1])
+    print(sorted_gpu_info)
     return sorted_gpu_info
 
 

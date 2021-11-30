@@ -1,0 +1,17 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Python: Current File",
+			"type": "python",
+			"request": "launch",
+			"program": "train_generator.py",
+			"args": ["--remark", "generator_train_nq_A",  "--train_batch_size", "128", "--eval_batch_size", "256", "--ckpt_metric", "val-ROUGE-1"],
+			"cwd": "./",
+			"console": "integratedTerminal"
+		}
+	]
+}
