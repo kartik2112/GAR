@@ -24,18 +24,23 @@ def fetch_all_retrieval_doc_ids(pred_file):
 
 def get_top_k_accuracy(top_k, predictions, searcher, target):
     hits = 0
+    results = []
     for docid in tqdm(predictions.keys()):
         found = False
         answers = [ans for ans in target[int(docid)]['short_answers']]
+        res = {'question': target[int(docid)]['question'], 'answers': answers, 'ctxs': []}
         for pred in predictions[docid][:top_k]:
             doc = searcher.doc(int(pred[0]))
             content = json.loads(doc.raw())['contents']
             if has_answer(answers=answers, text=content, tokenizer=SimpleTokenizer(), match_type='string'):
                 found = True
-                break
-        if found:
-            hits += 1
-    return 100 * hits / len(predictions.keys())
+            else:
+                found = False
+            res_obj = {'id': pred[0], 'title': json.loads(doc.raw())['title'], 'text': content, 'score': pred[1], 'has_answer': found}
+            res['ctxs'].append(res_obj)
+        results.append(res)
+            
+    return results
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -43,7 +48,7 @@ if __name__ == "__main__":
     parser.add_argument("--pred_file", type=str, help="predictions file")
     parser.add_argument("--index_file", type=str, help="index file")
     parser.add_argument("--target_file", type=str, help="target file")
-    parser.add_argument("--results_file", type=str, help="results file")
+    parser.add_argument("--output_file", type=str, help="output file")
     
 #     parser.add_argument("--top_k", type=int, default=20, help="top k retrieved results to be considered")
     
@@ -59,10 +64,12 @@ if __name__ == "__main__":
     print(len(target), len(predictions))
     
 #     print(get_top_k_accuracy(args.top_k, predictions, searcher, target))
-    with open(args.results_file, 'w') as fW:
-        for top_k in [5, 20, 100, 500, 1000]:
+    with open(args.output_file, 'w') as fW:
+        for top_k in [100]:
+#         for top_k in [5, 20, 100, 500, 1000]:
             res = get_top_k_accuracy(top_k, predictions, searcher, target)
-            print(top_k, res)
-            fW.write(str(top_k) + ': ' + str(res) + '\n')
+            fW.write(json.dumps(res, indent=4))
+#             print(top_k, res)
+#             fW.write(str(top_k) + ': ' + str(res) + '\n')
         
         
