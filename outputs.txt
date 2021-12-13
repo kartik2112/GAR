@@ -1,0 +1,3 @@
+BM25 Pyserini OP
+Total 21,015,324 documents indexed in 00:49:50
+
