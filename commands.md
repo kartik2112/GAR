@@ -12,8 +12,8 @@ GEN_TARGET='answer' python train_generator.py \
     --train_batch_size 128  \
     --eval_batch_size 256  \
     --ckpt_metric val-ROUGE-1  \
-    --data_dir '/scratch/kshenoy/data/nq-answer/'  \
-    --output_dir '/scratch/kshenoy/output/GAR_models/nq-answer/'
+    --data_dir '/data/nq-answer/'  \
+    --output_dir '/output/GAR_models/nq-answer/'
 
 
 GEN_TARGET='title' python train_generator.py  \
@@ -21,8 +21,8 @@ GEN_TARGET='title' python train_generator.py  \
     --train_batch_size 128  \
     --eval_batch_size 256  \
     --ckpt_metric val-ROUGE-1  \
-    --data_dir '/scratch/kshenoy/data/nq-title/'  \
-    --output_dir '/scratch/kshenoy/output/GAR_models/nq-title/'
+    --data_dir '/data/nq-title/'  \
+    --output_dir '/output/GAR_models/nq-title/'
 
 
 GEN_TARGET='sentence' python train_generator.py  \
@@ -30,21 +30,21 @@ GEN_TARGET='sentence' python train_generator.py  \
     --train_batch_size 128  \
     --eval_batch_size 256  \
     --ckpt_metric val-ROUGE-1  \
-    --data_dir '/scratch/kshenoy/data/nq-sentence/'  \
-    --output_dir '/scratch/kshenoy/output/GAR_models/nq-sentence/'
+    --data_dir '/data/nq-sentence/'  \
+    --output_dir '/output/GAR_models/nq-sentence/'
 ```
 
-<!-- GEN_TARGET='answer' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/scratch/kshenoy/data/nq-answer/' --output_dir '/scratch/kshenoy/output/GAR_models_v2/nq-answer/' --learning_rate=1e-6 --num_train_epochs 150
+<!-- GEN_TARGET='answer' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/data/nq-answer/' --output_dir '/output/GAR_models_v2/nq-answer/' --learning_rate=1e-6 --num_train_epochs 150
 
-GEN_TARGET='title' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/scratch/kshenoy/data/nq-title/' --output_dir '/scratch/kshenoy/output/GAR_models_v2/nq-title/' --learning_rate=1e-6 --num_train_epochs 150
+GEN_TARGET='title' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/data/nq-title/' --output_dir '/output/GAR_models_v2/nq-title/' --learning_rate=1e-6 --num_train_epochs 150
 
-GEN_TARGET='sentence' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/scratch/kshenoy/data/nq-sentence/' --output_dir '/scratch/kshenoy/output/GAR_models_v2/nq-sentence/' --learning_rate=1e-6 --num_train_epochs 150
+GEN_TARGET='sentence' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/data/nq-sentence/' --output_dir '/output/GAR_models_v2/nq-sentence/' --learning_rate=1e-6 --num_train_epochs 150
 
-GEN_TARGET='answer' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/scratch/kshenoy/data/nq-answer/' --output_dir '/scratch/kshenoy/output/GAR_models_v3/nq-answer/' --learning_rate=1e-5 --num_train_epochs 150
+GEN_TARGET='answer' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/data/nq-answer/' --output_dir '/output/GAR_models_v3/nq-answer/' --learning_rate=1e-5 --num_train_epochs 150
 
-GEN_TARGET='title' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/scratch/kshenoy/data/nq-title/' --output_dir '/scratch/kshenoy/output/GAR_models_v3/nq-title/' --learning_rate=1e-5 --num_train_epochs 150
+GEN_TARGET='title' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/data/nq-title/' --output_dir '/output/GAR_models_v3/nq-title/' --learning_rate=1e-5 --num_train_epochs 150
 
-GEN_TARGET='sentence' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/scratch/kshenoy/data/nq-sentence/' --output_dir '/scratch/kshenoy/output/GAR_models_v3/nq-sentence/' --learning_rate=1e-5 --num_train_epochs 150 -->
+GEN_TARGET='sentence' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/data/nq-sentence/' --output_dir '/output/GAR_models_v3/nq-sentence/' --learning_rate=1e-5 --num_train_epochs 150 -->
 
 
 <!-- # Executed trainers on 3 parallel V100s.
@@ -64,14 +64,14 @@ GEN_TARGET='sentence' python train_generator.py --remark generator_train_nq_A  -
 python -m pyserini.index -collection JsonCollection \
     -generator DefaultLuceneDocumentGenerator \
     -threads 256 \
-    -input /scratch/kshenoy/data/wikipedia_splits \
-    -index /scratch/kshenoy/data/indexes/psgs_w100_test \
+    -input /data/wikipedia_splits \
+    -index /data/indexes/psgs_w100_test \
     -storePositions -storeDocvectors -storeRaw
 ```
 
-<!-- # python -m pyserini.encode input   --corpus /scratch/kshenoy/data/dense_wikipedia_splits \
+<!-- # python -m pyserini.encode input   --corpus /data/dense_wikipedia_splits \
 # --fields text \
-# output  --embeddings /scratch/kshenoy/data/indexes/dindex-sample-dpr-multi \
+# output  --embeddings /data/indexes/dindex-sample-dpr-multi \
 # --to-faiss \
 # encoder --encoder facebook/dpr-ctx_encoder-multiset-base \
 # --fields text \
@@ -95,9 +95,9 @@ python -m pyserini.index -collection JsonCollection \
 Here, we also determine ROUGE scores wrt query contexts
 
 ```
-DATA_DIR='/scratch/kshenoy/data' \
-RET_DIR='/scratch/kshenoy/output/GAR_results' \
-CPT_DIR='/scratch/kshenoy/output/GAR_models' \
+DATA_DIR='/data' \
+RET_DIR='/output/GAR_results' \
+CPT_DIR='/output/GAR_models' \
 python test_generator.py --input_path $DATA_DIR/nq-answer/val.source  \
     --reference_path $DATA_DIR/nq-answer/val.target  \
     --output_path $RET_DIR/nq-answer/gar_nq_val_answer.txt  \
@@ -108,9 +108,9 @@ python test_generator.py --input_path $DATA_DIR/nq-answer/val.source  \
     --remark val_nq_answer
 
 
-DATA_DIR='/scratch/kshenoy/data' \
-RET_DIR='/scratch/kshenoy/output/GAR_results' \
-CPT_DIR='/scratch/kshenoy/output/GAR_models' \
+DATA_DIR='/data' \
+RET_DIR='/output/GAR_results' \
+CPT_DIR='/output/GAR_models' \
 python test_generator.py --input_path $DATA_DIR/nq-title/val.source  \
     --reference_path $DATA_DIR/nq-title/val.target  \
     --output_path $RET_DIR/nq-title/gar_nq_val_title.txt  \
@@ -121,9 +121,9 @@ python test_generator.py --input_path $DATA_DIR/nq-title/val.source  \
     --remark val_nq_title
 
 
-DATA_DIR='/scratch/kshenoy/data' \
-RET_DIR='/scratch/kshenoy/output/GAR_results' \
-CPT_DIR='/scratch/kshenoy/output/GAR_models' \
+DATA_DIR='/data' \
+RET_DIR='/output/GAR_results' \
+CPT_DIR='/output/GAR_models' \
 python test_generator.py --input_path $DATA_DIR/nq-sentence/val.source  \
     --reference_path $DATA_DIR/nq-sentence/val.target  \
     --output_path $RET_DIR/nq-sentence/gar_nq_val_sentence.txt  \
@@ -137,41 +137,41 @@ python test_generator.py --input_path $DATA_DIR/nq-sentence/val.source  \
 
 # Determine ROUGE scores wrt ground truth passages
 
-<!-- DATA_DIR='/scratch/kshenoy/data'
+<!-- DATA_DIR='/data'
 python rouge_score_GT.py --queries_file $DATA_DIR/nq-answer/val.source 
---generations_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.answer.tsv 
+--generations_file /output/queries/gar_trained/nq_val_queries.answer.tsv 
 --gt_file $DATA_DIR/data/gold_passages_info/nq_dev.json
 
 python rouge_score_GT.py --queries_file $DATA_DIR/nq-sentence/val.source 
---generations_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.sentence.tsv 
+--generations_file /output/queries/gar_trained/nq_val_queries.sentence.tsv 
 --gt_file $DATA_DIR/data/gold_passages_info/nq_dev.json
 
 python rouge_score_GT.py --queries_file $DATA_DIR/nq-title/val.source 
---generations_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.title.tsv 
+--generations_file /output/queries/gar_trained/nq_val_queries.title.tsv 
 --gt_file $DATA_DIR/data/gold_passages_info/nq_dev.json -->
 
 ```
 python rouge_score_GT.py --queries_file $DATA_DIR/nq-answer/test.source 
-    --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.answer.tsv 
+    --generations_file /output/queries/gar_trained/nq_test_queries.answer.tsv 
     --gt_file $DATA_DIR/data/gold_passages_info/nq_test.json
 
 
 python rouge_score_GT.py --queries_file $DATA_DIR/nq-sentence/test.source 
-    --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.sentence.tsv 
+    --generations_file /output/queries/gar_trained/nq_test_queries.sentence.tsv 
     --gt_file $DATA_DIR/data/gold_passages_info/nq_test.json
 
 
 python rouge_score_GT.py --queries_file $DATA_DIR/nq-title/test.source.full 
-    --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.title.tsv 
+    --generations_file /output/queries/gar_trained/nq_test_queries.title.tsv 
     --gt_file $DATA_DIR/data/gold_passages_info/nq_test.json
 ```
 
 # Generate GAR predictions on test set for downstream task
 
 ```
-DATA_DIR='/scratch/kshenoy/data' \
-RET_DIR='/scratch/kshenoy/output/GAR_results' \
-CPT_DIR='/scratch/kshenoy/output/GAR_models' \
+DATA_DIR='/data' \
+RET_DIR='/output/GAR_results' \
+CPT_DIR='/output/GAR_models' \
 python test_generator.py --input_path $DATA_DIR/nq-answer/test.source  \
     --reference_path $DATA_DIR/nq-answer/test.target  \
     --output_path $RET_DIR/nq-answer/gar_nq_test_answer.txt  \
@@ -182,9 +182,9 @@ python test_generator.py --input_path $DATA_DIR/nq-answer/test.source  \
     --remark test_nq_answer
 
 
-DATA_DIR='/scratch/kshenoy/data' \
-RET_DIR='/scratch/kshenoy/output/GAR_results' \
-CPT_DIR='/scratch/kshenoy/output/GAR_models' \
+DATA_DIR='/data' \
+RET_DIR='/output/GAR_results' \
+CPT_DIR='/output/GAR_models' \
 python test_generator.py --input_path $DATA_DIR/nq-title/test.source.full  \
     --reference_path $DATA_DIR/nq-title/test.target.full  \
     --output_path $RET_DIR/nq-title/gar_nq_test_title.txt  \
@@ -195,9 +195,9 @@ python test_generator.py --input_path $DATA_DIR/nq-title/test.source.full  \
     --remark test_nq_title
 
 
-DATA_DIR='/scratch/kshenoy/data' \
-RET_DIR='/scratch/kshenoy/output/GAR_results' \
-CPT_DIR='/scratch/kshenoy/output/GAR_models' \
+DATA_DIR='/data' \
+RET_DIR='/output/GAR_results' \
+CPT_DIR='/output/GAR_models' \
 python test_generator.py --input_path $DATA_DIR/nq-sentence/test.source  \
     --reference_path $DATA_DIR/nq-sentence/test.target  \
     --output_path $RET_DIR/nq-sentence/gar_nq_test_sentence.txt  \
@@ -208,9 +208,9 @@ python test_generator.py --input_path $DATA_DIR/nq-sentence/test.source  \
     --remark test_nq_sentence
 
 
-DATA_DIR='/scratch/kshenoy/data' \
-RET_DIR='/scratch/kshenoy/output/GAR_results' \
-CPT_DIR='/scratch/kshenoy/output/GAR_models' \
+DATA_DIR='/data' \
+RET_DIR='/output/GAR_results' \
+CPT_DIR='/output/GAR_models' \
 python test_generator.py --input_path $DATA_DIR/nq-sentence/test.source.full  \
     --output_path $RET_DIR/nq-sentence/gar_nq_test_sentence.full.txt  \
     --bs 256 --model_ckpt $CPT_DIR/nq-sentence/checkpointlast.ckpt  \
@@ -236,115 +236,115 @@ python test_generator.py --input_path $DATA_DIR/nq-sentence/test.source.full  \
 # Create augmented query files (question + context)
 
 ```
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/test.source.full \
-    --answer_file /scratch/kshenoy/output/GAR_results/nq-answer/gar_nq_test_answer.txt \
-    --op_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.answer.tsv
+python merge_queries.py --queries_file /data/nq-title/test.source.full \
+    --answer_file /output/GAR_results/nq-answer/gar_nq_test_answer.txt \
+    --op_file /output/queries/gar_trained/nq_test_queries.answer.tsv
 
 
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/test.source.full \
-    --sentence_file /scratch/kshenoy/output/GAR_results/nq-sentence/gar_nq_test_sentence.full.txt \
-    --op_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.sentence.tsv
+python merge_queries.py --queries_file /data/nq-title/test.source.full \
+    --sentence_file /output/GAR_results/nq-sentence/gar_nq_test_sentence.full.txt \
+    --op_file /output/queries/gar_trained/nq_test_queries.sentence.tsv
 
 
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/test.source.full \
-    --title_file /scratch/kshenoy/output/GAR_results/nq-title/gar_nq_test_title.txt \
-    --op_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.title.tsv
+python merge_queries.py --queries_file /data/nq-title/test.source.full \
+    --title_file /output/GAR_results/nq-title/gar_nq_test_title.txt \
+    --op_file /output/queries/gar_trained/nq_test_queries.title.tsv
 
 
 # For GAR-Concat
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/test.source.full \
-    --answer_file /scratch/kshenoy/output/GAR_results/nq-answer/gar_nq_test_answer.txt \
-    --sentence_file /scratch/kshenoy/output/GAR_results/nq-sentence/gar_nq_test_sentence.full.txt \
-    --title_file /scratch/kshenoy/output/GAR_results/nq-title/gar_nq_test_title.txt \
-    --op_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.multi_input.tsv
+python merge_queries.py --queries_file /data/nq-title/test.source.full \
+    --answer_file /output/GAR_results/nq-answer/gar_nq_test_answer.txt \
+    --sentence_file /output/GAR_results/nq-sentence/gar_nq_test_sentence.full.txt \
+    --title_file /output/GAR_results/nq-title/gar_nq_test_title.txt \
+    --op_file /output/queries/gar_trained/nq_test_queries.multi_input.tsv
 
 
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/test.source.full \
-    --op_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.original.tsv
+python merge_queries.py --queries_file /data/nq-title/test.source.full \
+    --op_file /output/queries/gar_trained/nq_test_queries.original.tsv
 ```
 
 <!-- #########     VAL          ###########
 
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-answer/val.source \
---answer_file /scratch/kshenoy/output/GAR_results/nq-answer/gar_nq_val_answer.txt \
---op_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.answer.tsv
+python merge_queries.py --queries_file /data/nq-answer/val.source \
+--answer_file /output/GAR_results/nq-answer/gar_nq_val_answer.txt \
+--op_file /output/queries/gar_trained/nq_val_queries.answer.tsv
 
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-sentence/val.source \
---sentence_file /scratch/kshenoy/output/GAR_results/nq-sentence/gar_nq_val_sentence.txt \
---op_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.sentence.tsv
+python merge_queries.py --queries_file /data/nq-sentence/val.source \
+--sentence_file /output/GAR_results/nq-sentence/gar_nq_val_sentence.txt \
+--op_file /output/queries/gar_trained/nq_val_queries.sentence.tsv
 
-python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/val.source \
---title_file /scratch/kshenoy/output/GAR_results/nq-title/gar_nq_val_title.txt \
---op_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.title.tsv -->
+python merge_queries.py --queries_file /data/nq-title/val.source \
+--title_file /output/GAR_results/nq-title/gar_nq_val_title.txt \
+--op_file /output/queries/gar_trained/nq_val_queries.title.tsv -->
 
 # Retrieve Results from BM25 indexes
 
 <!-- # Task 6:
 # Retrieve documents
-# python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_sample/queries.answer_NEW.QG.test.tsv \
-# --index /scratch/kshenoy/data/indexes/psgs_w100 \
-# --output /scratch/kshenoy/output/retrieval_results/gar_sample/run.sample.txt \
+# python -m pyserini.search --topics /output/queries/gar_sample/queries.answer_NEW.QG.test.tsv \
+# --index /data/indexes/psgs_w100 \
+# --output /output/retrieval_results/gar_sample/run.sample.txt \
 # --bm25 \
 # --threads 16 -->
 ```
 
 <!-- # Took 20 mins -->
-python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.answer.tsv \
-    --index /scratch/kshenoy/data/indexes/psgs_w100 \
-    --output /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.txt \
+python -m pyserini.search --topics /output/queries/gar_trained/nq_test_queries.answer.tsv \
+    --index /data/indexes/psgs_w100 \
+    --output /output/retrieval_results/gar_trained/nq_test.answer.txt \
     --bm25 \
     --threads 16
 
 
 <!-- # Took 39 mins -->
-python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.sentence.tsv \
-    --index /scratch/kshenoy/data/indexes/psgs_w100 \
-    --output /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.txt \
+python -m pyserini.search --topics /output/queries/gar_trained/nq_test_queries.sentence.tsv \
+    --index /data/indexes/psgs_w100 \
+    --output /output/retrieval_results/gar_trained/nq_test.sentence.txt \
     --bm25 \
     --threads 16
 
 
 <!-- # Took 22 mins -->
-python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.title.tsv \
-    --index /scratch/kshenoy/data/indexes/psgs_w100 \
-    --output /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.txt \
+python -m pyserini.search --topics /output/queries/gar_trained/nq_test_queries.title.tsv \
+    --index /data/indexes/psgs_w100 \
+    --output /output/retrieval_results/gar_trained/nq_test.title.txt \
     --bm25 \
     --threads 16
 
 
 <!-- # Took 40 mins -->
-python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.multi_input.tsv \
-    --index /scratch/kshenoy/data/indexes/psgs_w100 \
-    --output /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.txt \
+python -m pyserini.search --topics /output/queries/gar_trained/nq_test_queries.multi_input.tsv \
+    --index /data/indexes/psgs_w100 \
+    --output /output/retrieval_results/gar_trained/nq_test.multi_input.txt \
     --bm25 \
     --threads 16
 
 
 <!-- # Took 13.5 mins -->
-python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.original.tsv \
-    --index /scratch/kshenoy/data/indexes/psgs_w100 \
-    --output /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.txt \
+python -m pyserini.search --topics /output/queries/gar_trained/nq_test_queries.original.tsv \
+    --index /data/indexes/psgs_w100 \
+    --output /output/retrieval_results/gar_trained/nq_test.original.txt \
     --bm25 \
     --threads 16
 
 ```
-<!-- # python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.original.tsv \
+<!-- # python -m pyserini.search --topics /output/queries/gar_trained/nq_test_queries.original.tsv \
 # --index ~/NLP_Proj/DPR/dpr/data/downloads/indexes/tfidf/nq \
-# --output /scratch/kshenoy/output/retrieval_results/gar_trained_new_index/nq_test.original.txt \
+# --output /output/retrieval_results/gar_trained_new_index/nq_test.original.txt \
 # --bm25 \
 # --threads 16 -->
 
 # Merge predictions for GAR-Fused
 
 ```
-python merge_predictions.py --answer_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.txt \
-    --sentence_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.txt \
-    --title_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.txt \
-    --op_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.txt
+python merge_predictions.py --answer_file /output/retrieval_results/gar_trained/nq_test.answer.txt \
+    --sentence_file /output/retrieval_results/gar_trained/nq_test.sentence.txt \
+    --title_file /output/retrieval_results/gar_trained/nq_test.title.txt \
+    --op_file /output/retrieval_results/gar_trained/nq_test.fused.txt
 
 ```
-<!-- python -m pyserini.dsearch --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.answer.tsv \
-    --index /scratch/kshenoy/data/indexes/downloads/indexes/single/nq/full \
+<!-- python -m pyserini.dsearch --topics /output/queries/gar_trained/nq_test_queries.answer.tsv \
+    --index /data/indexes/downloads/indexes/single/nq/full \
     --encoder facebook/dpr-question_encoder-multiset-base \
     --output runs/run.dpr.nq-test.multi.bf.trec \
     --batch-size 128 --threads 16 -->
@@ -362,91 +362,91 @@ python dense_retriever.py \
 # Determine top-k accuracies
 
 ```
-python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.txt \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.results.txt
+python retr_acc.py --pred_file /output/retrieval_results/gar_trained/nq_test.original.txt \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --results_file /output/retrieval_results/gar_trained/nq_test.original.results.txt
 
 
-python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.results.txt
+python retr_acc.py --pred_file /output/retrieval_results/gar_trained/nq_test.answer.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --results_file /output/retrieval_results/gar_trained/nq_test.answer.results.txt
 
 
-python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.results.txt
+python retr_acc.py --pred_file /output/retrieval_results/gar_trained/nq_test.sentence.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --results_file /output/retrieval_results/gar_trained/nq_test.sentence.results.txt
 
 
-python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.results.txt
+python retr_acc.py --pred_file /output/retrieval_results/gar_trained/nq_test.title.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --results_file /output/retrieval_results/gar_trained/nq_test.title.results.txt
 
 
-python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.results.txt
+python retr_acc.py --pred_file /output/retrieval_results/gar_trained/nq_test.multi_input.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --results_file /output/retrieval_results/gar_trained/nq_test.multi_input.results.txt
 
 
-python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.results.txt
+python retr_acc.py --pred_file /output/retrieval_results/gar_trained/nq_test.fused.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --results_file /output/retrieval_results/gar_trained/nq_test.fused.results.txt
 ```
 
 # Generate reader IP files
 
 ```
-python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.reader_file.json
+python generate_reader_ip_file.py --pred_file /output/retrieval_results/gar_trained/nq_test.original.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.original.reader_file.json
 
 
-python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.reader_file.json
+python generate_reader_ip_file.py --pred_file /output/retrieval_results/gar_trained/nq_test.answer.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.answer.reader_file.json
 
 
-python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.reader_file.json
+python generate_reader_ip_file.py --pred_file /output/retrieval_results/gar_trained/nq_test.sentence.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.sentence.reader_file.json
 
 
-python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.reader_file.json
+python generate_reader_ip_file.py --pred_file /output/retrieval_results/gar_trained/nq_test.title.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.title.reader_file.json
 
-python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.reader_file.json
+python generate_reader_ip_file.py --pred_file /output/retrieval_results/gar_trained/nq_test.multi_input.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.multi_input.reader_file.json
 
 
-python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.txt  \
-    --index_file /scratch/kshenoy/data/indexes/psgs_w100  \
-    --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.reader_file.json
+python generate_reader_ip_file.py --pred_file /output/retrieval_results/gar_trained/nq_test.fused.txt  \
+    --index_file /data/indexes/psgs_w100  \
+    --target_file /data/data/gold_passages_info/nq_test.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.fused.reader_file.json
 ```
 
 # Merge GAR, DPR retrieval results
 
 ```
-python merge_reader_files.py --ip1_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.reader_file.json  \
-    --ip2_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.dpr.reader_file.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input+dpr.reader_file.json
+python merge_reader_files.py --ip1_file /output/retrieval_results/gar_trained/nq_test.multi_input.reader_file.json  \
+    --ip2_file /output/retrieval_results/gar_trained/nq_test.dpr.reader_file.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.multi_input+dpr.reader_file.json
 
 
-python merge_reader_files.py --ip1_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.reader_file.json  \
-    --ip2_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.dpr.reader_file.json  \
-    --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused+dpr.reader_file.json
+python merge_reader_files.py --ip1_file /output/retrieval_results/gar_trained/nq_test.fused.reader_file.json  \
+    --ip2_file /output/retrieval_results/gar_trained/nq_test.dpr.reader_file.json  \
+    --output_file /output/retrieval_results/gar_trained/nq_test.fused+dpr.reader_file.json
 ```
 
 # DPR Reader: Determine EM accuracies
