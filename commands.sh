@@ -1,4 +1,13 @@
+# References
+
+# https://github.com/castorini/pyserini/tree/5f22397e2b9eb339e365c7eb95ee19c7682e533b
+# https://github.com/castorini/pyserini/blob/master/docs/usage-dense-indexes.md
+# https://github.com/facebookresearch/DPR
+# https://github.com/castorini/pyserini/blob/master/docs/experiments-dpr.md
+
+
 salloc --time=9:00:00 --cpus-per-task=4 --mem=16GB --partition=gpu --gres=gpu:v100:1 --priority=TOP
+salloc --time=9:00:00 --cpus-per-task=16 --mem=16GB --priority=TOP
 
 # Python BART Caching since discovery gpu mode cuts off internet:
 # from transformers import BartTokenizer, BartModel
@@ -23,6 +32,7 @@ GEN_TARGET='title' python train_generator.py --remark generator_train_nq_A  --tr
 
 GEN_TARGET='sentence' python train_generator.py --remark generator_train_nq_A  --train_batch_size 128 --eval_batch_size 256 --ckpt_metric val-ROUGE-1 --data_dir '/scratch/kshenoy/data/nq-sentence/' --output_dir '/scratch/kshenoy/output/GAR_models_v3/nq-sentence/' --learning_rate=1e-5 --num_train_epochs 150
 
+
 # Executed trainers on 3 parallel V100s.
 # Answer: 21 hours
 # Title: 30 hours
@@ -38,9 +48,9 @@ sinfo -o "%20N  %10c  %10m  %25f  %30G "
 
 python -m pyserini.index -collection JsonCollection \
                          -generator DefaultLuceneDocumentGenerator \
-                         -threads 4 \
+                         -threads 256 \
                          -input /scratch/kshenoy/data/wikipedia_splits \
-                         -index /scratch/kshenoy/data/indexes/psgs_w100 \
+                         -index /scratch/kshenoy/data/indexes/psgs_w100_test \
                          -storePositions -storeDocvectors -storeRaw
 
 
@@ -89,7 +99,7 @@ RET_DIR='/scratch/kshenoy/output/GAR_results'
 CPT_DIR='/scratch/kshenoy/output/GAR_models'
 python test_generator.py --input_path $DATA_DIR/nq-sentence/test.source.full --output_path $RET_DIR/nq-sentence/gar_nq_test_sentence.full.txt --bs 256 --model_ckpt $CPT_DIR/nq-sentence/checkpointlast.ckpt --max_source_length 20 --max_target_length 40 --remark test_nq_sentence_full
 
-# Task 3: VAL SET NQ GAR evaluations ~1min per command
+# Task 3: VAL SET NQ GAR evaluations ~1min per command =====================  VAL  =============================
 
 DATA_DIR='/scratch/kshenoy/data'
 RET_DIR='/scratch/kshenoy/output/GAR_results'
@@ -136,6 +146,37 @@ python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/test.sourc
 python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/test.source.full \
 --op_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.original.tsv
 
+
+#########     VAL          ###########
+
+python merge_queries.py --queries_file /scratch/kshenoy/data/nq-answer/val.source \
+--answer_file /scratch/kshenoy/output/GAR_results/nq-answer/gar_nq_val_answer.txt \
+--op_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.answer.tsv
+
+python merge_queries.py --queries_file /scratch/kshenoy/data/nq-sentence/val.source \
+--sentence_file /scratch/kshenoy/output/GAR_results/nq-sentence/gar_nq_val_sentence.txt \
+--op_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.sentence.tsv
+
+python merge_queries.py --queries_file /scratch/kshenoy/data/nq-title/val.source \
+--title_file /scratch/kshenoy/output/GAR_results/nq-title/gar_nq_val_title.txt \
+--op_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.title.tsv
+
+# Task 3 - Derive remaining ROUGE scores
+DATA_DIR='/scratch/kshenoy/data'
+python rouge_score_GT.py --queries_file $DATA_DIR/nq-answer/val.source --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.answer.tsv --gt_file $DATA_DIR/data/gold_passages_info/nq_dev.json
+
+python rouge_score_GT.py --queries_file $DATA_DIR/nq-sentence/val.source --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.sentence.tsv --gt_file $DATA_DIR/data/gold_passages_info/nq_dev.json
+
+python rouge_score_GT.py --queries_file $DATA_DIR/nq-title/val.source --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_val_queries.title.tsv --gt_file $DATA_DIR/data/gold_passages_info/nq_dev.json
+
+
+python rouge_score_GT.py --queries_file $DATA_DIR/nq-answer/test.source --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.answer.tsv --gt_file $DATA_DIR/data/gold_passages_info/nq_test.json
+
+python rouge_score_GT.py --queries_file $DATA_DIR/nq-sentence/test.source --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.sentence.tsv --gt_file $DATA_DIR/data/gold_passages_info/nq_test.json
+
+python rouge_score_GT.py --queries_file $DATA_DIR/nq-title/test.source.full --generations_file /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.title.tsv --gt_file $DATA_DIR/data/gold_passages_info/nq_test.json
+
+
 # Task 6:
 # Retrieve documents
 # python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_sample/queries.answer_NEW.QG.test.tsv \
@@ -179,16 +220,50 @@ python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/n
 --bm25 \
 --threads 16
 
+# python -m pyserini.search --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.original.tsv \
+# --index ~/NLP_Proj/DPR/dpr/data/downloads/indexes/tfidf/nq \
+# --output /scratch/kshenoy/output/retrieval_results/gar_trained_new_index/nq_test.original.txt \
+# --bm25 \
+# --threads 16
+
 python merge_predictions.py --answer_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.txt \
 --sentence_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.txt \
 --title_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.txt \
 --op_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.txt
+
+python -m pyserini.dsearch --topics /scratch/kshenoy/output/queries/gar_trained/nq_test_queries.answer.tsv \
+--index /scratch/kshenoy/data/indexes/downloads/indexes/single/nq/full \
+--encoder facebook/dpr-question_encoder-multiset-base \
+--output runs/run.dpr.nq-test.multi.bf.trec \
+--batch-size 128 --threads 16
+
 
 # Task 7:
 python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.results.txt
 
 python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.results.txt
 
+python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.results.txt
+
+python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.results.txt
+
 python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.results.txt
 
 python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.results.txt
+
+# Task 8: Generate reader IP files
+python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.reader_file.json
+
+python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.answer.reader_file.json
+
+python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.sentence.reader_file.json
+
+python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.title.reader_file.json
+
+python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.reader_file.json
+
+python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.txt --index_file /scratch/kshenoy/data/indexes/psgs_w100 --target_file /scratch/kshenoy/data/data/gold_passages_info/nq_test.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.reader_file.json
+
+python merge_reader_files.py --ip1_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input.reader_file.json --ip2_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.dpr.reader_file.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.multi_input+dpr.reader_file.json
+
+python merge_reader_files.py --ip1_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.reader_file.json --ip2_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.dpr.reader_file.json --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused+dpr.reader_file.json
