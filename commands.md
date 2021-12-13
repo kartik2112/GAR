@@ -58,7 +58,7 @@ GEN_TARGET='sentence' python train_generator.py --remark generator_train_nq_A  -
 
 <!-- # Task 3A: 49 minutes -->
 
-# Generating BM25 indexes
+# Generate BM25 indexes
 
 ```
 python -m pyserini.index -collection JsonCollection \
@@ -91,7 +91,8 @@ python -m pyserini.index -collection JsonCollection \
 
 
 <!-- # Task 3: NQ GAR evaluations ~1min per command -->
-# Generate GAR predictions on validation set and determine ROUGE scores wrt query contexts
+# Generate GAR predictions on validation set 
+Here, we also determine ROUGE scores wrt query contexts
 
 ```
 DATA_DIR='/scratch/kshenoy/data' \
@@ -348,6 +349,16 @@ python merge_predictions.py --answer_file /scratch/kshenoy/output/retrieval_resu
     --output runs/run.dpr.nq-test.multi.bf.trec \
     --batch-size 128 --threads 16 -->
 
+# Generate DPR retrieval results
+
+```
+python dense_retriever.py \
+    model_file="bert-base-encoder.cp"  \
+    qa_dataset="nq_test"    \
+    out_file="Retriever_results/" \
+    encoded_ctx_files=“embedding_passages/*”
+```
+
 # Determine top-k accuracies
 
 ```
@@ -387,7 +398,7 @@ python retr_acc.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_tra
     --results_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.results.txt
 ```
 
-# Task 8: Generate reader IP files
+# Generate reader IP files
 
 ```
 python generate_reader_ip_file.py --pred_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.original.txt  \
@@ -436,6 +447,17 @@ python merge_reader_files.py --ip1_file /scratch/kshenoy/output/retrieval_result
 python merge_reader_files.py --ip1_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused.reader_file.json  \
     --ip2_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.dpr.reader_file.json  \
     --output_file /scratch/kshenoy/output/retrieval_results/gar_trained/nq_test.fused+dpr.reader_file.json
+```
+
+# DPR Reader: Determine EM accuracies
+
+```
+python train_extractive_reader.py prediction_results_file="Reader_results/" \
+dev_files="Reader_results/test.json"  \
+model_file="Reader_resultshf-bert-base.cp"  \
+train.dev_batch_size=80  \
+passages_per_question_predict=100   \
+encoder.sequence_length=350
 ```
 
 # Utility Commands executed
