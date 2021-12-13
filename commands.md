@@ -2,7 +2,9 @@
 # from transformers import BartTokenizer, BartModel
 # tokenizer = BartTokenizer.from_pretrained('facebook/bart-large') -->
 
+<!-- # Data used
 
+All the data used for training, inference has been stored here: [Google Drive](https://drive.google.com/drive/u/3/folders/1EVYz-Qcw4rd4FbLi_Q2MNXnyvkxkRAzt) -->
 
 # Training GAR models
 
